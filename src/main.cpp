@@ -36,7 +36,7 @@ int main() {
     int terminal_period = 5000; // Period multiplier for terminal outputs
     int terminal_period_counter = 0; // Terminal loop outputs
 
-    // Turn off direction inputs 
+    // Turn off direction inputs
     M1INA.write(0);
     M1INB.write(0);
 
@@ -48,7 +48,7 @@ int main() {
     int is_running = 0;
     int is_starting = 0;
 
-    // Current 
+    // Current
     int current_sense_mulitplier = 34; // Not sure we need to do this - arbitrary values should work fine, I think...
     float current_sense = 0;
 
@@ -63,8 +63,12 @@ int main() {
     int at_bottom_limit = !bottom_limit;
     int is_start_stop = start_stop;
 
+    int top_limit_debounce = 10;
+    int bottom_limit_debounce = 10;
+    int start_stop_debounce = 10;
+
     // Loop
-    while(i) { 
+    while(i) {
         // Increment counts
         velocity_period_counter++;
         current_period_counter++;
@@ -73,7 +77,7 @@ int main() {
 
         // Velocity loop
         if (velocity_period_counter >= velocity_period) {
-            M1PWM.write(0.05f); 
+            M1PWM.write(0.1f);
             M1INA = start_stop;
             velocity_period_counter = 0;
         }
@@ -88,7 +92,7 @@ int main() {
         if (input_period_counter >= input_period) {
             at_top_limit = !top_limit; // Poll top limit switch
             at_bottom_limit = !bottom_limit; // Poll bottom limit switch
-            // Poll start/stop switch 
+            // Poll start/stop switch
             if (start_stop && !is_starting) {
                 is_starting = 1;
                 if (is_running) {
@@ -115,7 +119,7 @@ int main() {
                 terminal_period_counter = 0;
             }
         }
-        
+
         wait_us(period); // Period
     }
 }
