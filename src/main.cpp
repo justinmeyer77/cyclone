@@ -8,7 +8,8 @@ int period = 50; // Period @ 20KHZ
 // PA8
 // PA9
 
-DigitalIn top_limit(PC_8, GPIO_PULLUP); // Top Limit Switch
+DigitalIn top_limit(PC_8); // Top Limit Switch
+
 /**
 DigitalIn bottom_limit(PB_4, PullUp); // Bottom Limit Switch (Prime)
 DigitalIn start_stop(PB_5, PullUp); // Emergency Stop (Should be paired to relay/trans out)
