@@ -51,7 +51,7 @@ int main() {
         **/
         M1INA = !a_input;
         M1INB = !b_input;
-        pc.printf("a: %d, b: %d, c: %d\n", a_input.read(), b_input.read(), c_input.read());
+        pc.printf("a: %d, b: %d, c: %d, current: %f\n", a_input.read(), b_input.read(), c_input.read(), M1CS.read());
         wait_us(100000); // Period
     }
 }
