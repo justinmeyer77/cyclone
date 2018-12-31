@@ -7,7 +7,7 @@ int period = 50; // Period @ 20KHZ
 // TIM1
 // PA8
 // PA9
-
+/**
 DigitalIn top_limit(PB_3, PullUp); // Top Limit Switch
 DigitalIn bottom_limit(PB_4, PullUp); // Bottom Limit Switch (Prime)
 DigitalIn start_stop(PB_5, PullUp); // Emergency Stop (Should be paired to relay/trans out)
@@ -34,7 +34,7 @@ https://www.st.com/content/ccc/resource/technical/document/user_manual/98/2e/fa/
 int main() {
 
     int i = 1; // Keep loop running unless shit goes south
-
+    /**
     // Turn off direction inputs
     M1INA.write(0);
     M1INB.write(0);
@@ -42,13 +42,15 @@ int main() {
     // Setup PWM
     M1PWM.period_us(50); // Set to 20KHZ
     M1PWM.write(0.2f); // Set Duty Cycle to 20%
-
+    **/
     while(i) {
+        /**
         M1INA = top_limit;
         M1INB = bottom_limit;
 
         pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS);
-
+        **/
+        pc.printf("tick...\n");
         wait_us(period); // Period
     }
 }
