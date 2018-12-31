@@ -8,9 +8,9 @@ int period = 50; // Period @ 20KHZ
 // PA8
 // PA9
 
-DigitalIn top_limit(D3, PullUp); // Top Limit Switch
-DigitalIn bottom_limit(D5, PullUp); // Bottom Limit Switch (Prime)
-DigitalIn start_stop(D11, PullUp); // Emergency Stop (Should be paired to relay/trans out)
+DigitalIn top_limit(PB_3, PullUp); // Top Limit Switch
+DigitalIn bottom_limit(PB_4, PullUp); // Bottom Limit Switch (Prime)
+DigitalIn start_stop(PB_5, PullUp); // Emergency Stop (Should be paired to relay/trans out)
 
 // LPD3806 600BM G5 24C
 // Red...5-24VDC...
