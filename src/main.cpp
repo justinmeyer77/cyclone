@@ -47,7 +47,7 @@ int main() {
         M1INA = top_limit;
         M1INB = bottom_limit;
 
-        pc.printf("top: %d, bottom: %d, other: %d\n", top_limit, bottom_limit, start_stop);
+        pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS);
 
         wait_us(period); // Period
     }
