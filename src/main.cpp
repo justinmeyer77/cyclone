@@ -16,7 +16,7 @@ DigitalIn c_input(PC_5, PullUp);
 DigitalIn M1EN(PC_10); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
 DigitalOut M1INA(PC_12); // Clockwise Input
 DigitalOut M1INB(PC_11); // Counter-Clockwise Input
-PwmOut M1PWM(D9); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins
+PwmOut M1PWM(D9); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins (PC_7?)
 AnalogIn M1CS(PC_0); // Output Of Current Sense Proportional To Motor Current If CS_DIS Is Low Or Open (CD_DIS Not Connected)
 
 // LPD3806 600BM G5 24C
