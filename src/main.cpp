@@ -8,7 +8,7 @@ int period = 50; // Period @ 20KHZ
 // PA8
 // PA9
 
-DigitalIn top_limit(PC_8, PullUp); // Top Limit Switch
+DigitalIn top_limit(PC_8, GPIO_PULLUP); // Top Limit Switch
 /**
 DigitalIn bottom_limit(PB_4, PullUp); // Bottom Limit Switch (Prime)
 DigitalIn start_stop(PB_5, PullUp); // Emergency Stop (Should be paired to relay/trans out)
@@ -50,7 +50,7 @@ int main() {
 
         pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS);
         **/
-        pc.printf("PC_8: %d\n", top_limit);
+        pc.printf("top_limit: %d\n", top_limit);
         wait_us(2000); // Period
     }
 }
