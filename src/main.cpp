@@ -12,9 +12,12 @@ DigitalIn a_input(PC_8, PullUp);
 DigitalIn b_input(PC_6, PullUp);
 DigitalIn c_input(PC_5, PullUp);
 
-/**
-DigitalIn bottom_limit(PB_4, PullUp); // Bottom Limit Switch (Prime)
-DigitalIn start_stop(PB_5, PullUp); // Emergency Stop (Should be paired to relay/trans out)
+
+DigitalIn M1EN(PC_10); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
+DigitalOut M1INA(PC_12); // Clockwise Input
+DigitalOut M1INB(PC_11); // Counter-Clockwise Input
+//PwmOut M1PWM(PD_2); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins
+AnalogIn M1CS(PC_0); // Output Of Current Sense Proportional To Motor Current If CS_DIS Is Low Or Open (CD_DIS Not Connected)
 
 // LPD3806 600BM G5 24C
 // Red...5-24VDC...
@@ -23,14 +26,7 @@ DigitalIn start_stop(PB_5, PullUp); // Emergency Stop (Should be paired to relay
 // White...B Phase...
 // Must be pulled up
 
-// Pololu Dual VNH5019 Motor Driver Shield for Arduino
-// Driver 1
-DigitalOut M1INA(PC_8); // Clockwise Input
-DigitalOut M1INB(PC_6); // Counter-Clockwise Input
-DigitalIn M1EN_DIAG(PC_5); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
-PwmOut M1PWM(PC_9); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins
-AnalogIn M1CS(PB_8); // Output Of Current Sense Proportional To Motor Current If CS_DIS Is Low Or Open (CD_DIS Not Connected)
-
+/**
 https://www.st.com/content/ccc/resource/technical/document/user_manual/98/2e/fa/4b/e0/82/43/b7/DM00105823.pdf/files/DM00105823.pdf/jcr:content/translations/en.DM00105823.pdf
 **/
 
