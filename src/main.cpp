@@ -8,7 +8,9 @@ int period = 50; // Period @ 20KHZ
 // PA8
 // PA9
 
-DigitalIn top_limit(PC_8); // Top Limit Switch
+DigitalIn a_input(PC_8, PullUp);
+DigitalIn b_input(PC_6, PullUp);
+DigitalIn c_input(PC_5, PullUp);
 
 /**
 DigitalIn bottom_limit(PB_4, PullUp); // Bottom Limit Switch (Prime)
@@ -51,7 +53,7 @@ int main() {
 
         pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS);
         **/
-        pc.printf("top_limit: %d\n", top_limit);
-        wait_us(2000); // Period
+        pc.printf("a: %d, b: %d, c: %d\n", a_input.read(), b_input.read(), c_input.read());
+        wait_us(100000); // Period
     }
 }
