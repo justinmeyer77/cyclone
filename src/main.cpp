@@ -32,7 +32,7 @@ https://www.st.com/content/ccc/resource/technical/document/user_manual/98/2e/fa/
 **/
 
 int main() {
-
+    pc.printf("start\n");
     int i = 1; // Keep loop running unless shit goes south
 
     // Turn off direction inputs
@@ -47,7 +47,7 @@ int main() {
         M1INA = top_limit;
         M1INB = bottom_limit;
 
-        pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS);
+        pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS.read());
 
         wait_us(period); // Period
     }
