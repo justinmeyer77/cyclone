@@ -21,11 +21,15 @@ DigitalIn start_stop(D11, PullUp); // Emergency Stop (Should be paired to relay/
 
 // Pololu Dual VNH5019 Motor Driver Shield for Arduino
 // Driver 1
-DigitalOut M1INA(D2); // Clockwise Input
-DigitalOut M1INB(D4); // Counter-Clockwise Input
-DigitalIn M1EN_DIAG(D6); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
-PwmOut M1PWM(D9); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins
-AnalogIn M1CS(A0); // Output Of Current Sense Proportional To Motor Current If CS_DIS Is Low Or Open (CD_DIS Not Connected)
+DigitalOut M1INA(PC_8); // Clockwise Input
+DigitalOut M1INB(PC_6); // Counter-Clockwise Input
+DigitalIn M1EN_DIAG(PC_5); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
+PwmOut M1PWM(PC_9); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins
+AnalogIn M1CS(PB_8); // Output Of Current Sense Proportional To Motor Current If CS_DIS Is Low Or Open (CD_DIS Not Connected)
+
+/**
+https://www.st.com/content/ccc/resource/technical/document/user_manual/98/2e/fa/4b/e0/82/43/b7/DM00105823.pdf/files/DM00105823.pdf/jcr:content/translations/en.DM00105823.pdf
+**/
 
 int main() {
 
