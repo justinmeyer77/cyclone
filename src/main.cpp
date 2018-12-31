@@ -40,7 +40,7 @@ int main() {
 
     // Setup PWM
     M1PWM.period_us(50); // Set to 20KHZ
-    M1PWM.write(0.1f); // Set Duty Cycle to 20%
+    M1PWM.write(0.05f); // Set Duty Cycle to 20%
 
     while(i) {
         /**
