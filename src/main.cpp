@@ -26,6 +26,7 @@ AnalogIn M1CS(PC_0); // Output Of Current Sense Proportional To Motor Current If
 // White...B Phase...PB_3
 // Must be pulled up
 // 1" = 25352, 29910, 27635 calc 28800
+// Pos = Up
 
 InterruptIn encoder_a_phase(PA_10, PullUp);
 DigitalIn encoder_b_phase(PB_3, PullUp);
@@ -34,10 +35,10 @@ int encoder_ticks = 0;
 
 void encoder_tick() {
   if (encoder_b_phase.read()) {
-    encoder_ticks++;
+    encoder_ticks--;
   }
   else {
-    encoder_ticks--;
+    encoder_ticks++;
   }
 }
 
@@ -78,7 +79,7 @@ int main() {
 
     // Setup PWM
     M1PWM.period_us(50); // Set to 20KHZ
-    M1PWM.write(0.125f); // Set Duty Cycle to 20%
+    M1PWM.write(0.25f); // Set Duty Cycle to 20%
 
     while(i) {
         pc.printf("a: %d, b: %d, c: %d, a-phase: %d, b-phase: %d, ticks: %d, current: %f\n", a_input.read(), b_input.read(), c_input.read(), encoder_a_phase.read(), encoder_b_phase.read(), encoder_ticks, M1CS.read());
