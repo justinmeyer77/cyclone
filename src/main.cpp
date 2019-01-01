@@ -26,10 +26,6 @@ AnalogIn M1CS(PC_0); // Output Of Current Sense Proportional To Motor Current If
 // White...B Phase...
 // Must be pulled up
 
-/**
-https://www.st.com/content/ccc/resource/technical/document/user_manual/98/2e/fa/4b/e0/82/43/b7/DM00105823.pdf/files/DM00105823.pdf/jcr:content/translations/en.DM00105823.pdf
-**/
-
 int main() {
 
     int i = 1; // Keep loop running unless shit goes south
@@ -43,12 +39,6 @@ int main() {
     M1PWM.write(0.05f); // Set Duty Cycle to 20%
 
     while(i) {
-        /**
-        M1INA = top_limit;
-        M1INB = bottom_limit;
-
-        pc.printf("top: %d, bottom: %d, other: %d, current: %f\n", top_limit, bottom_limit, start_stop, M1CS);
-        **/
         M1INA = !a_input;
         M1INB = !b_input;
         pc.printf("a: %d, b: %d, c: %d, current: %f\n", a_input.read(), b_input.read(), c_input.read(), M1CS.read());
