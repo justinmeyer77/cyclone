@@ -62,6 +62,21 @@ void b_input_fall() {
   M1INB = 1;
 }
 
+/**
+
+Target Position -> Trajectory Generator -> Position Loop -> Velocity Limiter -> Velocity Loop -> Current Limiter -> Current Loop -> Drive -> Motor|Encoder|Home
+
+Target Position
+- Up/Down?
+
+Trajectory Generator
+- Max velocity
+- Max acceleration
+- Max deceleration
+- Abort develeration
+
+**/
+
 int main() {
 
     int i = 1; // Keep loop running unless shit goes south
