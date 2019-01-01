@@ -97,7 +97,7 @@ int main() {
     M1PWM.write(0.25f); // Set Duty Cycle to 20%
 
     while(i) {
-        pc.printf("a: %d, b: %d, c: %d, a-phase: %d, b-phase: %d, ticks: %d, current: %f\n", a_input.read(), b_input.read(), c_input.read(), encoder_a_phase.read(), encoder_b_phase.read(), encoder_ticks, M1CS.read());
+        pc.printf("a: %d, b: %d, c: %d, a-phase: %d, b-phase: %d, ticks: %d, current: %f\r", a_input.read(), b_input.read(), c_input.read(), encoder_a_phase.read(), encoder_b_phase.read(), encoder_ticks, M1CS.read() * 34);
         //wait_us(period); // Period
         wait(0.250);
     }
