@@ -2,16 +2,18 @@
 
 Serial pc (SERIAL_TX, SERIAL_RX);
 
-int period = 50; // Period @ 20KHZ
+int period = 100; // Period @ 10KHZ
+int position_multiplier = 5; // 2KHZ
 
 // TIM1
 // PA8
 // PA9
 
-InterruptIn a_input(PC_8, PullUp);
-InterruptIn b_input(PC_6, PullUp);
-InterruptIn c_input(PC_5, PullUp);
+InterruptIn a_input(PC_8, PullUp); // Arbitrary input @ "A"
+InterruptIn b_input(PC_6, PullUp); // Arbitrary input @ "B"
+InterruptIn c_input(PC_5, PullUp); // Arbitrary input @ "C"
 
+DigitalOut oscope(PC_4, 0); // Loop tuning output @ oscope
 
 DigitalIn M1EN(PC_10); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
 DigitalOut M1INA(PC_12); // Clockwise Input
@@ -28,11 +30,12 @@ AnalogIn M1CS(PC_0); // Output Of Current Sense Proportional To Motor Current If
 // 1" = 25352, 29910, 27635 calc 28800
 // Pos = Up
 
-InterruptIn encoder_a_phase(PA_10, PullUp);
-DigitalIn encoder_b_phase(PB_3, PullUp);
+InterruptIn encoder_a_phase(PA_10, PullUp); // A phase @ encoder
+DigitalIn encoder_b_phase(PB_3, PullUp); // B phase @ encoder
 
-int encoder_ticks = 0;
+int encoder_ticks = 0; // Position
 
+// Encoder
 void encoder_tick() {
   if (encoder_b_phase.read()) {
     encoder_ticks--;
@@ -81,6 +84,7 @@ int main() {
 
     int i = 1; // Keep loop running unless shit goes south
 
+    // Attach interrupt methods
     encoder_a_phase.rise(&encoder_tick);
     c_input.fall(&reset_ticks);
     a_input.rise(&a_input_rise);
@@ -97,8 +101,10 @@ int main() {
     M1PWM.write(0.25f); // Set Duty Cycle to 20%
 
     while(i) {
-        pc.printf("a: %d, b: %d, c: %d, a-phase: %d, b-phase: %d, ticks: %d, current: %f\r", a_input.read(), b_input.read(), c_input.read(), encoder_a_phase.read(), encoder_b_phase.read(), encoder_ticks, M1CS.read() * 34);
-        //wait_us(period); // Period
-        wait(0.250);
+        //pc.printf("a: %d, b: %d, c: %d, a-phase: %d, b-phase: %d, ticks: %d, current: %f\r", a_input.read(), b_input.read(), c_input.read(), encoder_a_phase.read(), encoder_b_phase.read(), encoder_ticks, M1CS.read() * 34);
+
+
+        oscope = !oscope;
+        wait_us(period); // Period
     }
 }
