@@ -4,6 +4,7 @@ Serial pc (SERIAL_TX, SERIAL_RX);
 
 int period = 100; // Period @ 10KHZ
 int position_multiplier = 5; // 2KHZ
+int spin_period = 10; // Wait for period to elapse (loop control & timing)
 
 // TIM1
 // PA8
@@ -16,24 +17,15 @@ InterruptIn c_input(PC_5, PullUp); // Arbitrary input @ "C"
 DigitalOut oscope(PC_4, 0); // Loop tuning output @ oscope
 
 DigitalIn M1EN(PC_10); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
-DigitalOut M1INA(PC_12); // Clockwise Input
-DigitalOut M1INB(PC_11); // Counter-Clockwise Input
+DigitalOut M1INA(PC_12, 0); // Clockwise Input
+DigitalOut M1INB(PC_11, 0); // Counter-Clockwise Input
 PwmOut M1PWM(D9); // PWM Input, 20KHZ Max, Low = Off, High = On, Dependent On xINA/B Pins (PC_7?)
 AnalogIn M1CS(PC_0); // Output Of Current Sense Proportional To Motor Current If CS_DIS Is Low Or Open (CD_DIS Not Connected)
-
-// LPD3806 600BM G5 24C
-// Red...5-24VDC...
-// Black...Ground...
-// Green...A Phase...PA_10
-// White...B Phase...PB_3
-// Must be pulled up
-// 1" = 25352, 29910, 27635 calc 28800
-// Pos = Up
 
 InterruptIn encoder_a_phase(PA_10, PullUp); // A phase @ encoder
 DigitalIn encoder_b_phase(PB_3, PullUp); // B phase @ encoder
 
-int encoder_ticks = 0; // Position
+int encoder_ticks = 0; // 1" = 25352, 29910, 27635 calc 28800
 
 // Encoder
 void encoder_tick() {
@@ -67,7 +59,10 @@ void b_input_fall() {
 
 /**
 
-Target Position -> Trajectory Generator -> Position Loop -> Velocity Limiter -> Velocity Loop -> Current Limiter -> Current Loop -> Drive -> Motor|Encoder|Home
+Target Position -> Trajectory Generator -> Position Loop ->
+Velocity Limiter -> Velocity Loop ->
+Current Limiter -> Current Loop ->
+Drive -> Motor|Encoder|Home
 
 Target Position
 - Up/Down?
@@ -80,9 +75,24 @@ Trajectory Generator
 
 **/
 
+// Position
+
+
+// Current
+float current_now;
+
+// Timer
+Timer loop_timer;
+int loop_min_time; // Min elapsed loop cycle time (us)
+int loop_max_time; // Max elapsed loop cycle time (us)
+int loop_error = 150; // "Do Not Exceed" loop cycle time (us)
+int loop_current_time; //
+
 int main() {
+    pc.printf("STARTING SHIT\n");
 
     int i = 1; // Keep loop running unless shit goes south
+    int position_loop_counter = 0;
 
     // Attach interrupt methods
     encoder_a_phase.rise(&encoder_tick);
@@ -92,19 +102,34 @@ int main() {
     b_input.rise(&b_input_rise);
     b_input.fall(&b_input_fall);
 
-    // Turn off direction inputs
-    M1INA.write(0);
-    M1INB.write(0);
-
     // Setup PWM
     M1PWM.period_us(50); // Set to 20KHZ
     M1PWM.write(0.25f); // Set Duty Cycle to 20%
 
+    loop_timer.start(); // Start timing loop
+
     while(i) {
-        //pc.printf("a: %d, b: %d, c: %d, a-phase: %d, b-phase: %d, ticks: %d, current: %f\r", a_input.read(), b_input.read(), c_input.read(), encoder_a_phase.read(), encoder_b_phase.read(), encoder_ticks, M1CS.read() * 34);
+        loop_timer.reset(); // Reset loop timer
 
+        // Poll current sense
+        current_now = M1CS.read();
 
-        oscope = !oscope;
-        wait_us(period); // Period
+        // "Current Loop" timing
+
+        oscope = !oscope; // Current Loop Tuning Output (Square wave @ 1/2 freq)
+
+        loop_current_time = loop_timer.read_us(); // Get elapsed time for loop
+
+        if (loop_current_time < loop_min_time) { loop_min_time = loop_current_time; }
+        else if (loop_current_time > loop_max_time) { loop_max_time = loop_current_time; }
+        else if (loop_current_time >= loop_error) { i = 0; }
+
+        while (loop_timer.read_us() < period) {
+          wait_us(spin_period); // Period
+        }
     }
+
+    // Shit has gone south here
+    pc.printf("SHIT HAS GONE SOUTH\n");
+    pc.printf("min: %d, max: %d, current: %d\n", loop_min_time, loop_max_time, loop_current_time);
 }
