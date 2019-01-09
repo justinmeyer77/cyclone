@@ -1,6 +1,10 @@
 #include "mbed.h"
+#include "calcs.cpp"
 
 Serial pc (SERIAL_TX, SERIAL_RX);
+
+const int real_world_value = 100;
+const int calculated_value = test(real_world_value);
 
 // Control loop timing
 // Cascaded PID loops
@@ -84,13 +88,6 @@ void c_input_fall() { encoder_ticks = 0;}
 
 Timer loop_timer;
 const int loop_error = 150; // "Do Not Exceed" loop cycle time (us)
-
-
-// Test here
-constexpr int product(int x, int y)
-{
-    return (x * y);
-}
 
 int main() {
     pc.printf("Entering main\n");
