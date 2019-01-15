@@ -8,9 +8,9 @@ int current_period_counter = 0;
 int velocity_period_counter = 0;
 int position_period_counter = 0;
 
-DigitalOut current_scope_output(PC_4, 0); // Current loop timing output @ o'scope
-// DigitalOut velocity_loop_output(); // Velocity loop timing output @ o'scope
-// DigitalOut position_loop_output(); // Position loop timing output @ o'scope
+//DigitalOut current_loop_output(PC_4, 0); // Current loop timing output @ o'scope
+//DigitalOut velocity_loop_output(); // Velocity loop timing output @ o'scope
+//DigitalOut position_loop_output(); // Position loop timing output @ o'scope
 
 DigitalIn M1EN(PC_10); // High = Half-Bridge A & B Enabled, Low = Half-Bridge A & B Disabled (Combination of VHN5019 ENA/DIAGA & ENB/DIAGA Pins)
 DigitalOut M1INA(PC_12, 0); // Clockwise Input
@@ -25,7 +25,7 @@ DigitalIn encoder_b_phase(PB_3, PullUp); // B phase @ encoder
 
 int encoder_ticks = 0; // 1" = 25352, 29910, 27635 calc 28800
 
-void encoder_tick() {
+void encoder_a_phase_rise() {
   if (encoder_b_phase.read()) { encoder_ticks--; }
   else { encoder_ticks++; }
 }
@@ -53,9 +53,8 @@ int loop_enable = 1;
 // d = d_gain * slope
 
 int main() {
-    pc.printf("Entering main\n");
 
-    encoder_a_phase.rise(&encoder_tick);
+    encoder_a_phase.rise(&encoder_a_phase_rise);
 
     a_input.rise(&a_input_rise);
     a_input.fall(&a_input_fall);
@@ -67,17 +66,50 @@ int main() {
     M1PWM.period_us(motor_pwm_period); // Set to 20KHZ
     M1PWM.write(0.25f); // Set Duty Cycle
 
-    loop_timer.start(); // Start timing loop
+    // WORKING ->
 
+    float current_target;
+    float current_actual_now;
+    float current_actual_last;
+    float current_error_now;
+    float current_error_last;
+    float current_offset;
+    float current_limit;
+    int current_proportional_gain;
+    int current_integral_gain;
+    int current_derivitive_gain;
+    int
+
+
+    int velocity_target;
+    int velocity_error_now;
+    int velocity_error_last;
+
+    int position_target;
+    int position_error_now;
+    int position_error_last;
+
+    loop_timer.start(); // Start timing loop
 
     while(loop_enable) {
         loop_timer.reset();
 
+        current_period_counter++;
         velocity_period_counter++;
         position_period_counter++;
 
         // Current
+        if (current_period_counter >= current_period_multiplier) {
+          current_actual_now = M1CS.read();
 
+          if (current_target + current_offset >= current_limit) { current_error_now = current_limit - current_actual_now; }
+          else { current_error_now = current_target + current_offset - current_actual_now; }
+
+          
+
+          current_error_last = current_error_now;
+          current_period_counter = 0;
+        }
 
         // Velocity
         if (velocity_period_counter >= velocity_period_mulitiplier) {
@@ -89,10 +121,9 @@ int main() {
           position_period_counter = 0;
         }
 
-        while (loop_timer.read_us() < current_period) {
-          wait_us(spin_period); // Period
+        while (loop_timer.read_us() < base_period) {
+          wait_us(spin_period);
         }
 
-        current_scope_output = !current_scope_output;
     }
 }
